@@ -7,29 +7,26 @@ import grails.converters.deep.JSON
  * Time: 12:37 AM
  * To change this template use File | Settings | File Templates.
  *
- * Start 12:20 am
- * End 3:20am (2 hours)
- *
- * Start 1:00 pm
- * End 3:00 pm
  */
 class RunnerController {
+    def tests = [
+            [
+                    name: "com.ebiester.basicTest",
+                    checked: false,
+                    tests: [[name: "testWillSucceed",  checked: false],
+                            [name: "testWillFail", checked: false],
+                            [name:"testWillError", checked: false]
+                    ]
+            ],
+            [
+                    name: "com.ebiester.advancedTest",
+                    checked: false,
+                    tests: [[name: "funTest1",  checked: false],
+                            [name: "boringTest2", checked: false]
+                    ]
+            ]
+    ];
     def testList = {
-        def tests = [
-                [
-                        name: "com.ebiester.basicTest",
-                        tests: ["testWillSucceed",
-                                "testWillFail",
-                                "testWillError"
-                        ]
-                ],
-                [
-                        name: "com.ebiester.advancedTest",
-                        tests: ["funTest1",
-                                "boringTest2"
-                        ]
-                ]
-        ];
 
         render new JSON(target: tests)
     }

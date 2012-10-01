@@ -1,8 +1,8 @@
+//TODO: Get font sprites working
 //TODO: attach onclick to allow tests/subtests to be called
-//TODO: attach checkboxes to lists
 //TODO: Restyle UL/LI for a plus
-//TODO: attach run event to run
 //TODO: get + expansion working
+//TODO: Call from runTests to call json.
 //TODO: Get failure trace pulled in
 //TODO: Get log pulled in
 
@@ -44,39 +44,15 @@ function ResultsCtrl($scope, $resource) {
         {get: { method:'GET', isArray: true}});
 
     $scope.tests = $scope.getTests.get();
-    //$scope.tests = [1, 3, 5, 7, 8]
 
-    $scope.totalTests = 5;
-    $scope.runsFinished = 1;
-    $scope.totalRuns = 1;
-    $scope.testErrors = 2;
-    $scope.testFailures = 2;
+    $scope.totalTests = 0;
+    $scope.runsFinished = 0;
+    $scope.totalRuns = 0;
+    $scope.testErrors = 0;
+    $scope.testFailures = 0;
 
-}
+    $scope.runSelectedTests = function() {
+        console.log ($scope.tests);
+    }
 
-function TodoCtrl($scope) {
-    $scope.todos = [
-        {text:'learn angular', done:true},
-        {text:'build an angular app', done:false}];
-
-    $scope.addTodo = function() {
-        $scope.todos.push({text:$scope.todoText, done:false});
-        $scope.todoText = '';
-    };
-
-    $scope.remaining = function() {
-        var count = 0;
-        angular.forEach($scope.todos, function(todo) {
-            count += todo.done ? 0 : 1;
-        });
-        return count;
-    };
-
-    $scope.archive = function() {
-        var oldTodos = $scope.todos;
-        $scope.todos = [];
-        angular.forEach(oldTodos, function(todo) {
-            if (!todo.done) $scope.todos.push(todo);
-        });
-    };
 }

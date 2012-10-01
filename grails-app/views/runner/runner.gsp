@@ -2,30 +2,31 @@
 
 <html ng-app="TestRunner">
 <head>
-  <meta charset="utf-8" />
+    <meta charset="utf-8"/>
 
-  <!-- Set the viewport width to device width for mobile -->
-  <meta name="viewport" content="width=device-width" />
+    <!-- Set the viewport width to device width for mobile -->
+    <meta name="viewport" content="width=device-width"/>
 
-  <title>Web Test Runner</title>
+    <title>Web Test Runner</title>
 
-  <!-- Included CSS Files (Uncompressed) -->
-  <!--
+    <!-- Included CSS Files (Uncompressed) -->
+    <!--
   <link rel="stylesheet" href="css/foundation.css">
   -->
-  
-  <!-- Included CSS Files (Compressed) -->
-  <link rel="stylesheet" href="../css/foundation.min.css">
-  <link rel="stylesheet" href="../css/app.css">
 
-  <script src="../js/modernizr.foundation.js"></script>
+    <!-- Included CSS Files (Compressed) -->
+    <link rel="stylesheet" href="../css/foundation.min.css">
+    <link rel="stylesheet" href="../css/app.css">
+
+    <script src="../js/modernizr.foundation.js"></script>
 
     <!-- IE Fix for HTML5 Tags -->
-  <!--[if lt IE 9]>
+    <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
 </head>
+
 <body>
 
 <nav class="top-bar">
@@ -44,29 +45,33 @@
     </section>
 </nav>
 
-  <div class="row">
+<div class="row" ng-controller="ResultsCtrl">
 
-    <div class="six columns" ng-controller="ResultsCtrl">
+    <div class="six columns">
         <div id="results">
             <h5>Result</h5>
             Total: {{totalTests}} Runs {{runsFinished}}/{{totalRuns}} Errors {{testErrors}} Failures
             {{testFailures}}
         </div>
+
         <div id="tests">
             <h5>Tests</h5>
             <ul>
                 <li ng-repeat="suite in tests">
+                    <input type="checkbox" ng-model="suite.checked">
                     {{suite.name}}
                     <ul>
-                      <li ng-repeat="test in suite.tests">
-                          {{test}}
-                      </li>
+                        <li ng-repeat="test in suite.tests">
+                            <input type="checkbox" ng-model="test.checked">
+                            {{test.name}}
+                        </li>
                     </ul>
                 </li>
             </ul>
         </div>
-        <a href="#" class="tiny round button">Run</a>
+        <button ng-click="runSelectedTests()" class="tiny round button">Run</button>
     </div>
+
     <div id="details" class="six columns">
         <dl class="tabs">
             <dd class="active"><a href="#failureTrace">Failure Trace</a></dd>
@@ -74,38 +79,23 @@
         </dl>
 
         <ul class="tabs-content">
-            <li class="active" id="simple1Tab">
+            <li class="active" id="failureTraceTab">
                 <h2>Todo</h2>
-                <div ng-controller="TodoCtrl">
-                    <span>{{remaining()}} of {{todos.length}} remaining</span>
-                    [ <a href="" ng-click="archive()">archive</a> ]
-                    <ul class="unstyled">
-                        <li ng-repeat="todo in todos">
-                            <input type="checkbox" ng-model="todo.done">
-                            <span class="done-{{todo.done}}">{{todo.text}}</span>
-                        </li>
-                    </ul>
-                    <form ng-submit="addTodo()">
-                        <input type="text" ng-model="todoText"  size="30"
-                               placeholder="add new todo here">
-                        <input class="btn-primary" type="submit" value="add">
-                    </form>
-                </div>
             </li>
-            <li id="simple2Tab">This is simple tab 2's content. Now you see it!</li>
+            <li id="logTab">This is simple tab 2's content. Now you see it!</li>
         </ul>
     </div>
 
 </div>
 
-  <script src="../js/angular.min.js"></script>
-  <script src="../js/angular-resource.min.js"></script>
-  <script src="../js/underscore-min.js"></script>
-  <script src="../js/jquery.js"></script>
-  <script src="../js/foundation.min.js"></script>
-  
-  <!-- Initialize JS Plugins -->
-  <script src="../js/app.js"></script>
-  
+<script src="../js/angular.min.js"></script>
+<script src="../js/angular-resource.min.js"></script>
+<script src="../js/underscore-min.js"></script>
+<script src="../js/jquery.js"></script>
+<script src="../js/foundation.min.js"></script>
+
+<!-- Initialize JS Plugins -->
+<script src="../js/app.js"></script>
+
 </body>
 </html>
