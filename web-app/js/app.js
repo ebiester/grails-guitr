@@ -1,11 +1,3 @@
-//TODO: Get font sprites working
-//TODO: attach onclick to allow tests/subtests to be called
-//TODO: Restyle UL/LI for a plus
-//TODO: get + expansion working
-//TODO: Call from runTests to call json.
-//TODO: Get failure trace pulled in
-//TODO: Get log pulled in
-
 ;(function ($, window, undefined) {
   'use strict';
 
@@ -39,8 +31,8 @@ angular.module('TestRunner', ['ngResource']);
 
 function ResultsCtrl($scope, $resource) {
 
-    $scope.getTests = $resource('http://localhost:port/WebTestRunner/runner/testList',
-        {port: ':8080', callback: 'JSON_CALLBACK'},
+    $scope.getTests = $resource('http://:host:port/WebTestRunner/runner/testList',
+        {host: 'localhost', port: ':8080', callback: 'JSON_CALLBACK'},
         {get: { method:'GET', isArray: true}});
 
     $scope.tests = $scope.getTests.get();

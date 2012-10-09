@@ -1,0 +1,29 @@
+<plugin name='web-test-runner' version='0.1.3-SNAPSHOT' grailsVersion='2.0 &gt; *'>
+  <author>Eric Biesterfeld</author>
+  <authorEmail>eric@ebiester.com</authorEmail>
+  <title>Web Test Runner Plugin</title>
+  <description>This is a grails and spock-friendly Web Spock runner inspired by the Kotori Web JUnit Runner
+(http://code.google.com/p/ktrwjr/)
+</description>
+  <documentation>http://grails.org/plugin/web-test-runner</documentation>
+  <type>WebTestRunnerGrailsPlugin</type>
+  <resources>
+    <resource>RunnerController</resource>
+  </resources>
+  <repositories>
+    <repository name='grailsCentral' url='http://plugins.grails.org' />
+    <repository name='http://repo.grails.org/grails/plugins' url='http://repo.grails.org/grails/plugins/' />
+    <repository name='http://repo.grails.org/grails/core' url='http://repo.grails.org/grails/core/' />
+    <repository name='grailsCore' url='http://svn.codehaus.org/grails/trunk/grails-plugins' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+  </repositories>
+  <dependencies>
+    <compile>
+      <dependency group='org.spockframework' name='spock-core' version='0.6-groovy-1.8' />
+      <dependency group='junit' name='junit' version='4.10' />
+    </compile>
+  </dependencies>
+  <plugins />
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>
