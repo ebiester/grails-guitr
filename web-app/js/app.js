@@ -31,11 +31,15 @@ angular.module('TestRunner', ['ngResource']);
 
 function ResultsCtrl($scope, $resource) {
 
-    $scope.getTests = $resource('http://:host:port/WebTestRunner/runner/testList',
+    $scope.getTestsMethod = $resource('http://:host:port/WebTestRunner/runner/testList',
         {host: 'localhost', port: ':8080', callback: 'JSON_CALLBACK'},
         {get: { method:'GET', isArray: true}});
 
-    $scope.tests = $scope.getTests.get();
+    $scope.runTestsMethod = $resource('http://:host:port/WebTestRunner/runner/run',
+        {host: 'localhost', port: ':8080', callback: 'JSON_CALLBACK'},
+        {get: { method:'POST', isArray: true}});
+
+    $scope.tests = $scope.getTestsMethod.get();
 
     $scope.totalTests = 0;
     $scope.runsFinished = 0;
@@ -44,7 +48,7 @@ function ResultsCtrl($scope, $resource) {
     $scope.testFailures = 0;
 
     $scope.runSelectedTests = function() {
-        console.log ($scope.tests);
+        $scope.runTestsMethod.get();
     }
 
 }
