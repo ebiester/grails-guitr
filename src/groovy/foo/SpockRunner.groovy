@@ -28,6 +28,7 @@ class SpockRunner {
 
     }
 
+
     //Adapted from http://dzone.com/snippets/get-all-classes-within-package
 
 /**

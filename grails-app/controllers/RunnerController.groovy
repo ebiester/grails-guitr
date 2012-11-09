@@ -34,11 +34,16 @@ import grails.converters.deep.JSON
 class RunnerController {
     def testList = {
         def specs = new SpockRunner().specsAsListOfStrings().collect {[name:it, checked: false]}
+        println "$specs"
         render new JSON(target: specs)
     }
 
     def run = {
-        Result result = new SpockRunner().exec();
+        println "In Run!S"
+        def eaches = params.tests.each {print "test: ${it}"}
+        println "tests: $eaches"
+
+        Result result = new SpockRunner().exec(["spec.a.ErrorTestSpec"]);
         //if no result, exception thrown
 
         /*
