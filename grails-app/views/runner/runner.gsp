@@ -88,10 +88,10 @@
 
 </div>
 
-<script src="../js/angular.min.js"></script>
-<script src="../js/angular-resource.min.js"></script>
 <script src="../js/underscore-min.js"></script>
 <script src="../js/jquery.js"></script>
+<script src="../js/angular.min.js"></script>
+<script src="../js/angular-resource.min.js"></script>
 <script src="../js/foundation.min.js"></script>
 
 <!-- Initialize JS Plugins -->

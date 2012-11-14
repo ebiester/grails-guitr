@@ -40,6 +40,7 @@ class RunnerController {
 
     def run = {
         println "In Run!S"
+        println request
         def eaches = params.tests.each {print "test: ${it}"}
         println "tests: $eaches"
 

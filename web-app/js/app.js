@@ -35,12 +35,15 @@ function ResultsCtrl($scope, $resource) {
         {host: 'localhost', port: ':8080', callback: 'JSON_CALLBACK'},
         {get: { method:'GET', isArray: true}});
 
-    //$scope.tests = $scope.getTestsMethod.get();
+    $scope.tests = $scope.getTestsMethod.get();
 
-    $scope.tests = [{name: "spec.a.ErrorTestSpec", checked: true}, {name: "spec.a.ABTestSpec", checked: true}]
-    $scope.runTestsMethod = $resource('http://:host:port/WebTestRunner/runner/run',
-        {host: 'localhost', port: ':8080', callback: 'JSON_CALLBACK', tests: $scope.tests},
-            {save: { method:'POST', isArray: true}});
+     var runTestsResource = $resource('http://:host:port/WebTestRunner/runner/run', {
+        host: 'localhost',
+        port: ':8080',
+        callback: 'JSON_CALLBACK'
+     }, {
+        runTests: { method:'POST', isArray: true}
+     });
 
     $scope.totalTests = 0;
     $scope.runsFinished = 0;
@@ -49,8 +52,11 @@ function ResultsCtrl($scope, $resource) {
     $scope.testFailures = 0;
 
     $scope.runSelectedTests = function() {
-        var fun = $scope.runTestsMethod.save()
-        console.log(fun);
+        var filteredTests = _.filter($scope.tests,
+            function(test) {return test.checked == true;})
+
+        var fun = new runTestsResource({tests: _.pluck(filteredTests, 'name') });
+        fun.$runTests();
     }
 
 }
