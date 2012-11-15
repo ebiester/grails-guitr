@@ -31,32 +31,31 @@ angular.module('TestRunner', ['ngResource']);
 
 function ResultsCtrl($scope, $resource) {
 
-    $scope.getTestsMethod = $resource('http://:host:port/WebTestRunner/runner/testList',
-        {host: 'localhost', port: ':8080', callback: 'JSON_CALLBACK'},
-        {get: { method:'GET', isArray: true}});
+    $scope.getTestsMethod = $resource('/WebTestRunner/runner/testList');
 
-    $scope.tests = $scope.getTestsMethod.get();
+    $scope.tests = $scope.getTestsMethod.query();
 
-     var runTestsResource = $resource('http://:host:port/WebTestRunner/runner/run', {
-        host: 'localhost',
-        port: ':8080',
-        callback: 'JSON_CALLBACK'
-     }, {
-        runTests: { method:'POST', isArray: true}
-     });
+    var runTestsResource = $resource('/WebTestRunner/runner/run', {
+        tests: '@tests'
+    });
 
     $scope.totalTests = 0;
     $scope.runsFinished = 0;
     $scope.totalRuns = 0;
     $scope.testErrors = 0;
     $scope.testFailures = 0;
+    $scope.failures = "";
 
     $scope.runSelectedTests = function() {
         var filteredTests = _.filter($scope.tests,
             function(test) {return test.checked == true;})
 
         var fun = new runTestsResource({tests: _.pluck(filteredTests, 'name') });
-        fun.$runTests();
+        //TODO: Handle failure
+        fun.$get(function(result) {
+            $scope.testFailures = result.failureCount;
+            $scope.totalRuns = result.runCount;
+            $scope.failures = result.failures;
+        });
     }
-
 }

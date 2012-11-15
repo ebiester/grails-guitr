@@ -80,7 +80,7 @@
 
         <ul class="tabs-content">
             <li class="active" id="failureTraceTab">
-                <h2>Todo</h2>
+                {{failures}}
             </li>
             <li id="logTab">This is simple tab 2's content. Now you see it!</li>
         </ul>
@@ -90,8 +90,8 @@
 
 <script src="../js/underscore-min.js"></script>
 <script src="../js/jquery.js"></script>
-<script src="../js/angular.min.js"></script>
-<script src="../js/angular-resource.min.js"></script>
+<script src="../js/angular.js"></script>
+<script src="../js/angular-resource.js"></script>
 <script src="../js/foundation.min.js"></script>
 
 <!-- Initialize JS Plugins -->

@@ -13,23 +13,7 @@ import grails.converters.deep.JSON
  * Time: 12:37 AM
  * To change this template use File | Settings | File Templates.
  *
- * [
- [
- name: "com.ebiester.BasicTest",
- checked: false,
- tests: [[name: "testWillSucceed",  checked: false],
- [name: "testWillFail", checked: false],
- [name: "testWillError", checked: false]
- ]
- ],
- [
- name: "com.ebiester.AdvancedTest",
- checked: false,
- tests: [[name: "funTest1",  checked: false],
- [name: "boringTest2", checked: false]
- ]
- ]
- ];
+ *
  */
 class RunnerController {
     def testList = {
@@ -40,22 +24,24 @@ class RunnerController {
 
     def run = {
         println "In Run!S"
-        println request
-        def eaches = params.tests.each {print "test: ${it}"}
-        println "tests: $eaches"
+        List<String> tests = params?.tests?.split(',')
 
-        Result result = new SpockRunner().exec(["spec.a.ErrorTestSpec"]);
+        //TODO: validation here.
+        Result result = new SpockRunner().exec(tests);
         //if no result, exception thrown
 
-        /*
-        def resultJSON = [
-                result.failureCount
-                result.runCount
-                result.getFailures()
 
-        ] */
+        def resultObject = [
+                runCount: result.runCount,
+                failureCount: result.failureCount,
+                runCount: result.runCount,
+                failures: result.getFailures(),
+                runtime: result.runTime
+        ]
 
-        render "" //exec
+        println resultObject
+
+        render new JSON(target: resultObject) //exec
     }
 
 

@@ -77,11 +77,14 @@ class SpockRunner {
     String thisResult = ""
 
     Result exec(List<String> testList) {
+        if (testList.isEmpty()) {return null}
+
         println "in run"
         JUnitCore runner = new JUnitCore()
         runner.addListener(new JUnitListener())
-        //If we're running our own unit tests, our own system class loader is sufficient.
+        //If we're running our own unit tests, the Grails application loader won't exist.
         ClassLoader loader = ApplicationHolder?.getApplication()?.getClassLoader() ?: ClassLoader.getSystemClassLoader()
+        //only runs one class so far!
         def firstTest = testList.get(0)
         Class clazz = Class.forName(firstTest, true, loader)
         Result result
