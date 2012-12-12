@@ -27,35 +27,82 @@
 
 //Clean up as we go
 
-angular.module('TestRunner', ['ngResource']);
+var testApp = angular.module('TestRunner', ['ngResource']);
+
+testApp.directive('helloWorld', function(){
+   return {
+       restrict: 'E',
+       scope: {
+           name:'@'
+       },
+       template: '<span>Hello {{name}}</span>'
+   }
+});
+
+
+testApp.directive('testSpec', function(){
+    return {
+        restrict: 'E',
+        scope: {
+            spec:'@'
+        },
+        template: '<input type="checkbox" ng-model="spec.isChecked" />' +
+                  '{{spec.spec}}'
+    }
+});
 
 function ResultsCtrl($scope, $resource) {
 
-    $scope.getTestsMethod = $resource('/WebTestRunner/runner/testList');
+    $scope.getTestsMethod = $resource('/WebTestRunner/runner/testList',
+        {baseDirectory:'@baseDirectory',
+         packageName: '@packageName'});
 
-    $scope.tests = $scope.getTestsMethod.query();
+    $scope.testTree = {};
+    $scope.testMap = {};
 
     var runTestsResource = $resource('/WebTestRunner/runner/run', {
         tests: '@tests'
     });
 
-    $scope.totalTests = 0;
-    $scope.runsFinished = 0;
-    $scope.totalRuns = 0;
-    $scope.testErrors = 0;
-    $scope.testFailures = 0;
-    $scope.failures = "";
+    //TODO: Hook up to local storage
+    $scope.baseDirectory = "";
+    $scope.packageName = "";
+
+    $scope.statistics = {
+        totalTests: 0,
+        testErrors: 0,
+        testFailures: 0,
+        runtime: 0
+    }
+
+    $scope.getTests = function() {
+        $scope.getTestsMethod.query(
+            {baseDirectory: $scope.baseDirectory,
+             packageName: $scope.packageName},
+            function(tests) {
+            $scope.testTree = tests;
+        });
+    }
 
     $scope.runSelectedTests = function() {
-        var filteredTests = _.filter($scope.tests,
-            function(test) {return test.checked == true;})
+        var filteredTests = [];
+        for (i in $scope.testTree) {
+            var suite = $scope.testTree[i];
+            for (j in suite.specs) {
+                var spec = suite.specs[j];
+                if (spec.isChecked == true) {
+                    filteredTests.push({"className": suite.className, "spec":spec})
+                }
+            }
+        }
 
-        var fun = new runTestsResource({tests: _.pluck(filteredTests, 'name') });
+        var res = new runTestsResource({tests: angular.toJson(filteredTests)});
         //TODO: Handle failure
-        fun.$get(function(result) {
-            $scope.testFailures = result.failureCount;
-            $scope.totalRuns = result.runCount;
-            $scope.failures = result.failures;
+        res.$get(function(result) {
+            $scope.statistics.testFailures = result.failureCount;
+            $scope.statistics.totalTests = result.runCount;
+            $scope.statistics.runtime = result.runtime;
+            //$scope.statistics.failures = result.failures;
         });
     }
 }

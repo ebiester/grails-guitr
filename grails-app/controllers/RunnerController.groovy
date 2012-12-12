@@ -1,10 +1,12 @@
-import grails.converters.deep.JSON
-        import org.junit.runner.JUnitCore
-        import org.junit.runner.notification.RunListener
-        import org.junit.runner.Description
-        import org.junit.runner.Result
-        import org.codehaus.groovy.grails.commons.ApplicationHolder
-        import foo.SpockRunner
+import org.junit.runner.Result
+import com.ebiester.webtestrunner.SpockRunner
+import com.ebiester.webtestrunner.MethodClassRetriever
+import grails.converters.*
+import com.ebiester.webtestrunner.bean.ClassSpecsPair
+import org.codehaus.groovy.grails.commons.ApplicationHolder
+import com.ebiester.webtestrunner.bean.ClassMethodPair
+import org.codehaus.groovy.grails.web.json.JSONArray
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,31 +19,53 @@ import grails.converters.deep.JSON
  */
 class RunnerController {
     def testList = {
-        def specs = new SpockRunner().specsAsListOfStrings().collect {[name:it, checked: false]}
-        println "$specs"
-        render new JSON(target: specs)
+        String directoryName = params?.baseDirectory
+        String packageName = params?.packageName
+
+        //TODO: error checking
+        //c:/Users/ebiester/work/WebTestRunner/src/groovy/spec
+
+        ClassLoader loader = ApplicationHolder.getApplication().getClassLoader()
+        MethodClassRetriever methodClassRetriever = new MethodClassRetriever()
+        File baseDirectory = new File(directoryName)
+        List<Class> classes = methodClassRetriever.findClasses(loader,
+                baseDirectory, packageName)
+        List<ClassSpecsPair> specs = methodClassRetriever.specsAsClassSpecsPairList(classes)
+
+        //if exception or null, "No classes found. Please check your directory and package"?
+        render specs as JSON
     }
 
     def run = {
-        println "In Run!S"
-        List<String> tests = params?.tests?.split(',')
+        JSONArray tests = JSON.parse(params?.tests)
+        println tests
+
+        List<ClassMethodPair> testList = []
+//            [new ClassMethodPair("spec.a.ErrorTestSpec", "Test results in failure"),
+//                    new ClassMethodPair("spec.a.ErrorTestSpec", "Test results in Exception")]
+
+        tests.each { JSONObject test ->
+            String className = test.get("className")
+            JSONObject jsonSpec = test.get("spec")
+            String specName = jsonSpec.get("spec")
+            testList.add(new ClassMethodPair(className, specName))
+        }
 
         //TODO: validation here.
-        Result result = new SpockRunner().exec(tests);
+        List<Result> resultList = new SpockRunner().exec(testList);
         //if no result, exception thrown
 
+        Result result = resultList.get(0)
 
         def resultObject = [
                 runCount: result.runCount,
+                //errorCount: result.errorCount,
                 failureCount: result.failureCount,
-                runCount: result.runCount,
                 failures: result.getFailures(),
                 runtime: result.runTime
         ]
 
-        println resultObject
-
-        render new JSON(target: resultObject) //exec
+        render new JSON(resultObject) //exec
     }
 
 

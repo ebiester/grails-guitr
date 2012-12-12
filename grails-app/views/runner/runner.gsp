@@ -34,43 +34,55 @@
         <li class="name"><h1><a href="#">Web Spock Runner</a></h1></li>
         <li class="toggle-topbar"><a href="#"></a></li>
     </ul>
-    <section>
-        <ul class="left">
-            <li><a href="#">Link</a></li>
-        </ul>
-
-        <ul class="right">
-            <li><a href="#">Link</a></li>
-        </ul>
-    </section>
 </nav>
 
 <div class="row" ng-controller="ResultsCtrl">
 
     <div class="six columns">
+
+        <div id="getDirectory">
+            <h5>Test Directory</h5>
+            <input type="text" id="baseDirectory"
+                   placeholder="c:/Users/me/proj/src/groovy/spec"
+                   ng-model="baseDirectory"/>
+            <!-- TODO: On return, run getTests() -->
+            <input type="text" id="basePackage"
+                   placeholder="spec"
+                   ng-model="packageName" />
+            <button ng-click="getTests()" class="tiny round button">Get Tests</button>
+        </div>
+
         <div id="results">
             <h5>Result</h5>
-            Total: {{totalTests}} Runs {{runsFinished}}/{{totalRuns}} Errors {{testErrors}} Failures
-            {{testFailures}}
+            Passed: {{statistics.runsFinished}}/{{statistics.totalTests}}
+            Errors: {{statistics.testErrors}}/{{statistics.totalTests}}
+            Failures: {{statistics.testFailures}}/{{statistics.totalTests}}
+            Runtime: {{statistics.runtime}} ms
         </div>
 
         <div id="tests">
             <h5>Tests</h5>
+
             <ul>
-                <li ng-repeat="suite in tests">
-                    <input type="checkbox" ng-model="suite.checked">
-                    {{suite.name}}
+                <li ng-repeat="suite in testTree">
+                    <!-- TODO: make this work to check all specs of suite
+                    <input type="checkbox" ng-model="suite.isChecked">
+                    -->
+                    {{suite.className}}
                     <ul>
-                        <li ng-repeat="test in suite.tests">
-                            <input type="checkbox" ng-model="test.checked">
-                            {{test.name}}
+                        <li ng-repeat="spec in suite.specs">
+                            <input type="checkbox" ng-model="spec.isChecked">
+                            {{spec.spec}}
                         </li>
                     </ul>
                 </li>
             </ul>
+
+            <button ng-click="runSelectedTests()" class="tiny round button">Run</button>
         </div>
-        <button ng-click="runSelectedTests()" class="tiny round button">Run</button>
+
     </div>
+
 
     <div id="details" class="six columns">
         <dl class="tabs">

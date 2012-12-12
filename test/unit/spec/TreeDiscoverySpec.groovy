@@ -1,7 +1,9 @@
 package spec
 
 import spock.lang.Specification
-import foo.SpockRunner
+
+import com.ebiester.webtestrunner.MethodClassRetriever
+import com.ebiester.webtestrunner.bean.ClassSpecsPair
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +16,7 @@ class TreeDiscoverySpec extends Specification{
 
         def "Test simple directory discovery"() {
             given:
-            def sourceFolder = new File("src/groovy")
+            def sourceFolder = new File("src/groovy/spec")
             def rootSpecPackage = "spec"
             ClassLoader loader = ClassLoader.getSystemClassLoader()
 
@@ -22,7 +24,7 @@ class TreeDiscoverySpec extends Specification{
 
 
             when:
-            result = new SpockRunner().findClasses(loader, sourceFolder, rootSpecPackage)
+            result = new MethodClassRetriever().findClasses(loader, sourceFolder, rootSpecPackage)
 
             then:
             result.size() == 4
@@ -30,13 +32,19 @@ class TreeDiscoverySpec extends Specification{
 
     def "Test simple spec list of strings"() {
         given:
-            def testListOfStrings = ["spec.a.ErrorTestSpec", "spec.a.ABTestSpec", "spec.b.BATestSpec", "spec.AdditionSpec"]
+            def sourceFolder = new File("src/groovy/spec")
+            def rootSpecPackage = "spec"
+            ClassLoader loader = ClassLoader.getSystemClassLoader()
+            MethodClassRetriever methodClassRetriever = new MethodClassRetriever()
+            List<Class> classes =
+                methodClassRetriever.findClasses(loader, sourceFolder, rootSpecPackage)
 
         when:
-            def listOfStrings = new SpockRunner().specsAsListOfStrings()
+            List<ClassSpecsPair> classSpecsPairList =
+                methodClassRetriever.specsAsClassSpecsPairList(classes)
 
         then:
-            listOfStrings == testListOfStrings
+           classSpecsPairList.size() == 4
     }
 
 }
