@@ -1,3 +1,4 @@
+import com.ebiester.webtestrunner.JUnitResultHelper
 import org.junit.runner.Result
 import com.ebiester.webtestrunner.SpockRunner
 import com.ebiester.webtestrunner.MethodClassRetriever
@@ -57,25 +58,15 @@ class RunnerController {
         List<Result> resultList = new SpockRunner().exec(testList);
         //if no result, exception thrown
 
-
         //really statistics
         def resultObject = [
-                runCount: 0,
-                //errorCount: result.errorCount,
-                failureCount: 0,
+                runCount: resultList.size(),
+                errorCount: JUnitResultHelper.getTestErrorCount(resultList),
+                failureCount: JUnitResultHelper.getTestFailureCount(resultList),
+
                 failures: "",
                 runtime: 0
         ]
-
-        resultList.each { result ->
-            resultObject.runCount += result.runCount
-            //resultObject.errorCount += result.errorCount,
-            resultObject.failureCount += result.failureCount
-            //resultObject.failures += result.getFailures()
-                    //runtime: result.runTime
-        }
-
-        //get list of specs that will update on the client
 
         render new JSON(resultObject) //exec
     }
