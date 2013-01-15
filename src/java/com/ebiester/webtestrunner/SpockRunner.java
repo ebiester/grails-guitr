@@ -25,7 +25,8 @@ public class SpockRunner {
     }
 
     List<Result> exec(List<ClassMethodPair> testList) {
-        //Perhaps better way to handle this?
+        //Perhaps better way to handle this? 
+        //TODO: put assert here
         if (testList.isEmpty()) {
             return null;
         }

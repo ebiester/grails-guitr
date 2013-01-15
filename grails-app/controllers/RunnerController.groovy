@@ -24,6 +24,8 @@ class RunnerController {
 
         //TODO: error checking
         //c:/Users/ebiester/work/WebTestRunner/src/groovy/spec
+        //TODO: replace \ with /
+        //TODO: no specs shows as "no results found"
 
         ClassLoader loader = ApplicationHolder.getApplication().getClassLoader()
         MethodClassRetriever methodClassRetriever = new MethodClassRetriever()
@@ -55,21 +57,33 @@ class RunnerController {
         List<Result> resultList = new SpockRunner().exec(testList);
         //if no result, exception thrown
 
-        Result result = resultList.get(0)
 
+        //really statistics
         def resultObject = [
-                runCount: result.runCount,
+                runCount: 0,
                 //errorCount: result.errorCount,
-                failureCount: result.failureCount,
-                failures: result.getFailures(),
-                runtime: result.runTime
+                failureCount: 0,
+                failures: "",
+                runtime: 0
         ]
+
+        resultList.each { result ->
+            resultObject.runCount += result.runCount
+            //resultObject.errorCount += result.errorCount,
+            resultObject.failureCount += result.failureCount
+            //resultObject.failures += result.getFailures()
+                    //runtime: result.runTime
+        }
+
+        //get list of specs that will update on the client
 
         render new JSON(resultObject) //exec
     }
 
 
     def runner = {
+        //TODO: pull default directory from properties
+        //TODO: Save favorites, or some sort of preset run
     }
 }
 
