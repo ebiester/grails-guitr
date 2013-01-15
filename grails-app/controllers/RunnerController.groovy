@@ -23,9 +23,10 @@ class RunnerController {
         String directoryName = params?.baseDirectory
         String packageName = params?.packageName
 
+        directoryName = directoryName.replace("\\", "/")
+
         //TODO: error checking
         //c:/Users/ebiester/work/WebTestRunner/src/groovy/spec
-        //TODO: replace \ with /
         //TODO: no specs shows as "no results found"
 
         ClassLoader loader = ApplicationHolder.getApplication().getClassLoader()
@@ -47,12 +48,15 @@ class RunnerController {
 //            [new ClassMethodPair("spec.a.ErrorTestSpec", "Test results in failure"),
 //                    new ClassMethodPair("spec.a.ErrorTestSpec", "Test results in Exception")]
 
+        Calendar cal = Calendar.getInstance();
+        def startTime = cal.getTimeInMillis()
         tests.each { JSONObject test ->
             String className = test.get("className")
             JSONObject jsonSpec = test.get("spec")
             String specName = jsonSpec.get("spec")
             testList.add(new ClassMethodPair(className, specName))
         }
+        def endTime = cal.getTimeInMillis()
 
         //TODO: validation here.
         List<Result> resultList = new SpockRunner().exec(testList);
@@ -62,13 +66,15 @@ class RunnerController {
         def runsFinished = resultList.size() - errorCount - failureCount
 
         //really statistics
+        //TODO: figure out way to handle showing individual failures
+        //TODO:find way to handle runtime.
         def resultObject = [
                 runCount: resultList.size(),
                 errorCount: errorCount,
                 failureCount: failureCount,
                 runsFinished: runsFinished,
                 failures: "",
-                runtime: 0
+                runtime: (endTime - startTime)
         ]
 
         render new JSON(resultObject) //exec
