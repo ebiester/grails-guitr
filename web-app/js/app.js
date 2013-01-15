@@ -99,7 +99,9 @@ function ResultsCtrl($scope, $resource) {
         var res = new runTestsResource({tests: angular.toJson(filteredTests)});
         //TODO: Handle failure
         res.$get(function(result) {
+            $scope.statistics.runsFinished = result.runsFinished;
             $scope.statistics.testFailures = result.failureCount;
+            $scope.statistics.testErrors = result.errorCount;
             $scope.statistics.totalTests = result.runCount;
             $scope.statistics.runtime = result.runtime;
             //$scope.statistics.failures = result.failures;

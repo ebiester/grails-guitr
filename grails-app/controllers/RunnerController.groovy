@@ -57,13 +57,16 @@ class RunnerController {
         //TODO: validation here.
         List<Result> resultList = new SpockRunner().exec(testList);
         //if no result, exception thrown
+        def errorCount = JUnitResultHelper.getTestErrorCount(resultList)
+        def failureCount = JUnitResultHelper.getTestFailureCount(resultList)
+        def runsFinished = resultList.size() - errorCount - failureCount
 
         //really statistics
         def resultObject = [
                 runCount: resultList.size(),
-                errorCount: JUnitResultHelper.getTestErrorCount(resultList),
-                failureCount: JUnitResultHelper.getTestFailureCount(resultList),
-
+                errorCount: errorCount,
+                failureCount: failureCount,
+                runsFinished: runsFinished,
                 failures: "",
                 runtime: 0
         ]
