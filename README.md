@@ -3,13 +3,6 @@ grails-guitr
 
 Grails (web) UI Test Runner for spock.
 
-I am still in pre-alpha, please do not even attempt to use. In the short term, I'm still in exploratory mode, and haven't even started writing tests. 
+This was an attempt to create an integration test runner plugin that could be used in development to run integrated tests during the normal run-app lifecycle. While it worked (and a more complete version is deployed at a private organization), it was eventually abandoned because it required too many compromises -- mostly, that we had to place the tests within src/groovy without forking grails itself, or making other similar compromises. 
 
-Motivating this is a frustration in the time it takes to restart tests in grails, and is influenced by Kotori Web JUnit Runner. 
-
-This is a precursor to SUITR, the Scala UI Test Runner. 
-
-
-TODO:
-Single selection: select 1 test - is this necessary?
-Multiple selection: select multiple tests
+I may eventually return to it and finish the UI (and implement the log functionality) but it's not currently being used. If you are interested, send me an email and I can write up some install instructions. 
